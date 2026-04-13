@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Task Board - Dynamic Kanban</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
         <h1>My Task Board</h1>
         <span id="taskCounter">0</span>
+        <!--span like add a label easy for js to find and modify it-->
         <select id="priorityFilter">
             <option value="all">All Priorities</option>
             <option value="low">Low</option>
@@ -16,6 +18,7 @@
         </select>
     </header>
 
+    <main id="board">
     <section id="todo">
         <h2>To Do</h2>
         <ul></ul>
@@ -33,8 +36,14 @@
         <ul></ul>
         <button class="add-task-btn">+ Add Task</button>
     </section>
+    </main>
 
     <div id="taskModal" style="display:none;">
+        <!--style="display:none hide it, later use js to change to make it visible-->
+        
+        <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h3>Task Details</h3>
         <input type="text" id="modalTitle" placeholder="Task Title">
         <textarea id="modalDesc" placeholder="Task Description"></textarea>
         <select id="modalPriority">
@@ -43,8 +52,14 @@
             <option value="high">High</option>
         </select>
         <input type="date" id="modalDueDate">
+
+        <div class="modal-buttons">
         <button id="saveTaskBtn">Save</button>
         <button id="cancelModalBtn">Cancel</button>
+        </div>
     </div>
+    </div>
+
+    <script src="taskmanager.js"></script>
 </body>
 </html>
