@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Board - Dynamic Kanban</title>
+</head>
+<body>
+    <header>
+        <h1>My Task Board</h1>
+        <span id="taskCounter">0</span>
+        <select id="priorityFilter">
+            <option value="all">All Priorities</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+        </select>
+    </header>
+
+    <section id="todo">
+        <h2>To Do</h2>
+        <ul></ul>
+        <button class="add-task-btn">+ Add Task</button>
+    </section>
+
+    <section id="inprogress">
+        <h2>In Progress</h2>
+        <ul></ul>
+        <button class="add-task-btn">+ Add Task</button>
+    </section>
+
+    <section id="done">
+        <h2>Done</h2>
+        <ul></ul>
+        <button class="add-task-btn">+ Add Task</button>
+    </section>
+
+    <div id="taskModal" style="display:none;">
+        <input type="text" id="modalTitle" placeholder="Task Title">
+        <textarea id="modalDesc" placeholder="Task Description"></textarea>
+        <select id="modalPriority">
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+        </select>
+        <input type="date" id="modalDueDate">
+        <button id="saveTaskBtn">Save</button>
+        <button id="cancelModalBtn">Cancel</button>
+    </div>
+</body>
+</html>
