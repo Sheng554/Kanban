@@ -214,4 +214,49 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.close-modal').addEventListener('click', closeModal);
     const modal = document.getElementById('taskModal');
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+
+    allLists.forEach(ul => {
+        ul.addEventListener('dblclick', (e) => {
+            const titleElem = e.target.closest('.task-title');
+            if (!titleElem) return;
+            const card = titleElem.closest('li');
+            const taskId = parseInt(card.getAttribute('data-task-id'));
+            const currentTitle = titleElem.textContent;
+        
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentTitle;
+            input.className = 'task-title-input';
+        
+            titleElem.replaceWith(input);
+            input.focus();
+        
+            const saveTitle = () => {
+                const newTitle = input.value.trim();
+                if (newTitle && newTitle !== currentTitle) {
+                    updateTask(taskId, { title: newTitle });
+                } else if (!newTitle) {
+                
+                    const newH3 = document.createElement('h3');
+                    newH3.className = 'task-title';
+                    newH3.textContent = currentTitle;
+                    input.replaceWith(newH3);
+                    return;
+                }
+            
+                const newH3 = document.createElement('h3');
+                newH3.className = 'task-title';
+                newH3.textContent = newTitle || currentTitle;
+                input.replaceWith(newH3);
+            };
+        
+            input.addEventListener('blur', saveTitle);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    input.blur();
+                }
+            });
+        });
+    });
 });
