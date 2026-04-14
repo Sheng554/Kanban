@@ -395,3 +395,20 @@ ul {
 .is-hidden {
     display: none;
 }
+
+.clear-done-btn {
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-xl);
+    font-weight: 600;
+    cursor: pointer;
+    color: #b91c1c;
+    margin-top: var(--spacing-sm);
+    transition: var(--transition-fast);
+}
+
+.clear-done-btn:hover {
+    background: #fecaca;
+}

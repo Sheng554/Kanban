@@ -174,6 +174,16 @@ function updateTask(taskId, updatedData) {
     filterTasks();
 }
 
+function clearDoneTasks() {
+    const doneCards = document.querySelectorAll('#done .task-card');
+    doneCards.forEach((card, index) => {
+        setTimeout(() => {
+            const taskId = parseInt(card.getAttribute('data-task-id'));
+            deleteTask(taskId);
+        }, index * 100); // 每个间隔 100ms
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const allLists = document.querySelectorAll('#board ul');
     allLists.forEach(ul => {
@@ -285,4 +295,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     priorityFilter.addEventListener('change', filterTasks);
+
+    const clearDoneBtn = document.getElementById('clearDoneBtn');
+        if (clearDoneBtn) {
+        clearDoneBtn.addEventListener('click', clearDoneTasks);
+    }
 });
