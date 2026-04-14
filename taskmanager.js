@@ -35,7 +35,7 @@ function openModalForAdd(targetColumn) {
     modal.style.display = 'flex';
 }
 
-// ========== 1. createTaskCard(taskObj) ==========
+// ========== 1. createTaskCard ==========
 function createTaskCard(taskObj) {
     const li = document.createElement('li');
     li.setAttribute('data-task-id', taskObj.id);
@@ -95,6 +95,26 @@ function createTaskCard(taskObj) {
     return li;
 }
 
+// ========== 2. addTask ==========
+function addTask(columnId, taskObj) {
+    const newTask = {
+        id: nextId++,
+        columnId: columnId,
+        title: taskObj.title,
+        desc: taskObj.desc,
+        priority: taskObj.priority,
+        dueDate: taskObj.dueDate || ''
+    };
+    tasks.push(newTask);
+
+    const listContainer = getColumnList(columnId);
+    if (listContainer) {
+        const card = createTaskCard(newTask);
+        listContainer.appendChild(card);
+    }
+    updateTotalTaskCounter();
+}
+
 const sampleTask = {
     id: 999,
     title: "Test Task",
@@ -105,3 +125,10 @@ const sampleTask = {
 const card = createTaskCard(sampleTask);
 console.log(card);
 document.querySelector('#todo ul').appendChild(card);
+
+addTask('todo', {
+    title: "Test Add",
+    desc: "Added via console",
+    priority: "medium",
+    dueDate: "2025-01-01"
+});

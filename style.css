@@ -294,3 +294,88 @@ ul {
     border-radius: var(--radius-full);
     width: fit-content;
 }
+
+/* ========== 2. priority） ========== */
+.priority-badge {
+    display: inline-block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    font-size: var(--font-xs);
+    font-weight: bold;
+    text-align: center;
+    width: fit-content;
+    letter-spacing: 0.5px;
+}
+
+.priority-high {
+    background: #fee2e2;
+    color: var(--priority-high);
+    border-left: 3px solid var(--priority-high);
+}
+
+.priority-medium {
+    background: #fffbeb;
+    color: var(--priority-medium);
+    border-left: 3px solid var(--priority-medium);
+}
+
+.priority-low {
+    background: #f0fdf4;
+    color: var(--priority-low);
+    border-left: 3px solid var(--priority-low);
+}
+
+/* ========== 3. Edit / Delete ========== */
+.edit-btn, .delete-btn {
+    padding: var(--spacing-xs) var(--spacing-md);
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--font-xs);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    width: fit-content;
+    margin-top: var(--spacing-xs);
+}
+
+.edit-btn {
+    background: var(--color-accent-3);
+    color: var(--text-primary);
+}
+
+.edit-btn:hover {
+    background: var(--color-accent-2);
+}
+
+.delete-btn {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}
+
+/* ========== 4. deleteTask animation ========== */
+.fade-out {
+    animation: fadeOut 0.25s ease forwards;
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.95);
+        display: none;
+    }
+}
+
+/* ========== Common Board ========== */
+#board ul {
+    list-style: none;
+    margin: var(--spacing-md) 0;
+    min-height: 200px;
+}
