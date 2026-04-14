@@ -145,24 +145,73 @@ function editTask(taskId) {
     modal.style.display = 'flex';
 }
 
-const sampleTask = {
-    id: 999,
-    title: "Test Task",
-    desc: "This is a test description",
-    priority: "high",
-    dueDate: "2025-12-31"
-};
-const card = createTaskCard(sampleTask);
-console.log(card);
-document.querySelector('#todo ul').appendChild(card);
+// ========== 5. updateTask(taskId, updatedData) ==========
+function updateTask(taskId, updatedData) {
+    const taskIndex = tasks.findIndex(t => t.id == taskId);
+    if (taskIndex === -1) return;
 
-addTask('todo', {
-    title: "Test Add",
-    desc: "Added via console",
-    priority: "medium",
-    dueDate: "2025-01-01"
+    const oldTask = tasks[taskIndex];
+    const newTask = { ...oldTask, ...updatedData };
+    tasks[taskIndex] = newTask;
+
+    if (updatedData.columnId && updatedData.columnId !== oldTask.columnId) {
+        const oldCard = document.querySelector(`li[data-task-id='${taskId}']`);
+        if (oldCard) oldCard.remove();
+        const newList = getColumnList(updatedData.columnId);
+        if (newList) {
+            const newCard = createTaskCard(newTask);
+            newList.appendChild(newCard);
+        }
+    } else {
+        const oldCard = document.querySelector(`li[data-task-id='${taskId}']`);
+        if (oldCard) {
+            const newCard = createTaskCard(newTask);
+            oldCard.parentNode.replaceChild(newCard, oldCard);
+        }
+    }
+    updateTotalTaskCounter();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const allLists = document.querySelectorAll('#board ul');
+    allLists.forEach(ul => {
+        ul.addEventListener('click', (e) => {
+            const action = e.target.getAttribute('data-action');
+            const card = e.target.closest('li');
+            if (!card) return;
+            const taskId = parseInt(card.getAttribute('data-task-id'));
+            if (action === 'edit') editTask(taskId);
+            else if (action === 'delete') deleteTask(taskId);
+        });
+    });
+
+    const addButtons = document.querySelectorAll('.add-task-btn');
+    addButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const section = btn.closest('section');
+            const columnId = section ? section.id : 'todo';
+            openModalForAdd(columnId);
+        });
+    });
+
+    const saveBtn = document.getElementById('saveTaskBtn');
+    saveBtn.addEventListener('click', () => {
+        const title = document.getElementById('modalTitle').value.trim();
+        const desc = document.getElementById('modalDesc').value.trim();
+        const priority = document.getElementById('modalPriority').value;
+        const dueDate = document.getElementById('modalDueDate').value;
+        if (!title) return alert('Please enter a task title');
+        if (currentEditId !== null) {
+            updateTask(currentEditId, { title, desc, priority, dueDate });
+        } else {
+            const targetColumn = document.getElementById('taskModal').getAttribute('data-target-column') || 'todo';
+            addTask(targetColumn, { title, desc, priority, dueDate });
+        }
+        closeModal();
+    });
+
+    document.getElementById('cancelModalBtn').addEventListener('click', closeModal);
+    document.querySelector('.close-modal').addEventListener('click', closeModal);
+    const modal = document.getElementById('taskModal');
+    modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 });
-
-deleteTask(1);
-
-editTask(2);
