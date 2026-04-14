@@ -131,6 +131,20 @@ function deleteTask(taskId) {
     card.addEventListener('animationend', onAnimationEnd);
 }
 
+// ========== 4. editTask(taskId) ==========
+function editTask(taskId) {
+    const task = tasks.find(t => t.id == taskId);
+    if (!task) return;
+
+    currentEditId = taskId;
+    const modal = document.getElementById('taskModal');
+    document.getElementById('modalTitle').value = task.title;
+    document.getElementById('modalDesc').value = task.desc;
+    document.getElementById('modalPriority').value = task.priority;
+    document.getElementById('modalDueDate').value = task.dueDate || '';
+    modal.style.display = 'flex';
+}
+
 const sampleTask = {
     id: 999,
     title: "Test Task",
@@ -150,3 +164,5 @@ addTask('todo', {
 });
 
 deleteTask(1);
+
+editTask(2);
