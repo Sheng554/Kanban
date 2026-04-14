@@ -391,3 +391,7 @@ ul {
     color: var(--text-primary);
     margin-bottom: var(--spacing-xs);
 }
+
+.is-hidden {
+    display: none;
+}

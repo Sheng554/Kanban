@@ -113,6 +113,7 @@ function addTask(columnId, taskObj) {
         listContainer.appendChild(card);
     }
     updateTotalTaskCounter();
+    filterTasks();
 }
 
 // ========== 3. deleteTask(taskId) ==========
@@ -170,6 +171,7 @@ function updateTask(taskId, updatedData) {
         }
     }
     updateTotalTaskCounter();
+    filterTasks();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -259,4 +261,28 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
+
+
+    const priorityFilter = document.getElementById('priorityFilter');
+    function filterTasks() {
+        const selectedPriority = priorityFilter.value;
+        const allCards = document.querySelectorAll('#board .task-card');
+        allCards.forEach(card => {
+            const priorityBadge = card.querySelector('.priority-badge');
+            let cardPriority = '';
+            if (priorityBadge) {
+                const badgeText = priorityBadge.textContent;
+                if (badgeText === 'HIGH') cardPriority = 'high';
+                else if (badgeText === 'MEDIUM') cardPriority = 'medium';
+                else if (badgeText === 'LOW') cardPriority = 'low';
+            }
+            if (selectedPriority === 'all' || cardPriority === selectedPriority) {
+                card.classList.remove('is-hidden');
+            } else {
+                card.classList.add('is-hidden');
+            }
+        });
+    }
+
+    priorityFilter.addEventListener('change', filterTasks);
 });
