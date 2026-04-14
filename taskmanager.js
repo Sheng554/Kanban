@@ -115,6 +115,22 @@ function addTask(columnId, taskObj) {
     updateTotalTaskCounter();
 }
 
+// ========== 3. deleteTask(taskId) ==========
+function deleteTask(taskId) {
+    const card = document.querySelector(`li[data-task-id='${taskId}']`);
+    if (!card) return;
+
+    card.classList.add('fade-out');
+    const onAnimationEnd = () => {
+        card.removeEventListener('animationend', onAnimationEnd);
+        card.remove();
+        const index = tasks.findIndex(t => t.id == taskId);
+        if (index !== -1) tasks.splice(index, 1);
+        updateTotalTaskCounter();
+    };
+    card.addEventListener('animationend', onAnimationEnd);
+}
+
 const sampleTask = {
     id: 999,
     title: "Test Task",
@@ -132,3 +148,5 @@ addTask('todo', {
     priority: "medium",
     dueDate: "2025-01-01"
 });
+
+deleteTask(1);
