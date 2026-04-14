@@ -254,3 +254,43 @@ ul {
         padding: var(--spacing-sm) var(--spacing-md);
     }
 }
+
+/* ========== 1. createTaskCard  ========== */
+.task-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition-fast);
+    border-left: 4px solid;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.task-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.task-card h3 {
+    font-size: var(--font-md);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.task-card p {
+    font-size: var(--font-sm);
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+.due-date {
+    font-size: var(--font-xs);
+    color: var(--text-muted);
+    background: var(--color-accent-1);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-full);
+    width: fit-content;
+}
