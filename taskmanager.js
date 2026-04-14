@@ -51,6 +51,9 @@ function createTaskCard(taskObj) {
     descElem.textContent = taskObj.desc;
     li.appendChild(descElem);
 
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'task-row';
+
     const priorityElem = document.createElement('span');
     let priorityClass = '';
     let priorityText = '';
@@ -71,27 +74,31 @@ function createTaskCard(taskObj) {
             priorityClass = 'priority-medium';
             priorityText = 'MEDIUM';
     }
-    priorityElem.className = `priority-badge ${priorityClass}`;
+    priorityElem.classList.add('priority-badge');
+    priorityElem.classList.add(priorityClass);
     priorityElem.textContent = priorityText;
-    li.appendChild(priorityElem);
+    rowDiv.appendChild(priorityElem);
 
     const dueElem = document.createElement('span');
     dueElem.className = 'due-date';
-    dueElem.textContent = taskObj.dueDate ? `Due: ${taskObj.dueDate}` : 'No due date';
-    li.appendChild(dueElem);
+    dueElem.textContent = taskObj.dueDate 
+    ? 'Due: ' + taskObj.dueDate 
+    : 'No due date';
+    rowDiv.appendChild(dueElem);
 
     const editBtn = document.createElement('button');
     editBtn.textContent = 'Edit';
     editBtn.className = 'edit-btn';
     editBtn.setAttribute('data-action', 'edit');
-    li.appendChild(editBtn);
+    rowDiv.appendChild(editBtn);
 
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Delete';
     deleteBtn.className = 'delete-btn';
     deleteBtn.setAttribute('data-action', 'delete');
-    li.appendChild(deleteBtn);
+    rowDiv.appendChild(deleteBtn);
 
+    li.appendChild(rowDiv);
     return li;
 }
 
@@ -113,10 +120,10 @@ function addTask(columnId, taskObj) {
         listContainer.appendChild(card);
     }
     updateTotalTaskCounter();
-    filterTasks();
+    filterTasks(); 
 }
 
-// ========== 3. deleteTask(taskId) ==========
+// ========== 3. deleteTask ==========
 function deleteTask(taskId) {
     const card = document.querySelector(`li[data-task-id='${taskId}']`);
     if (!card) return;
@@ -132,7 +139,7 @@ function deleteTask(taskId) {
     card.addEventListener('animationend', onAnimationEnd);
 }
 
-// ========== 4. editTask(taskId) ==========
+// ========== 4. editTask ==========
 function editTask(taskId) {
     const task = tasks.find(t => t.id == taskId);
     if (!task) return;
@@ -146,7 +153,7 @@ function editTask(taskId) {
     modal.style.display = 'flex';
 }
 
-// ========== 5. updateTask(taskId, updatedData) ==========
+// ========== 5. updateTask ==========
 function updateTask(taskId, updatedData) {
     const taskIndex = tasks.findIndex(t => t.id == taskId);
     if (taskIndex === -1) return;
@@ -171,18 +178,88 @@ function updateTask(taskId, updatedData) {
         }
     }
     updateTotalTaskCounter();
-    filterTasks();
+    filterTasks(); 
 }
 
+// ========== Clear Done ==========
 function clearDoneTasks() {
     const doneCards = document.querySelectorAll('#done .task-card');
     doneCards.forEach((card, index) => {
         setTimeout(() => {
             const taskId = parseInt(card.getAttribute('data-task-id'));
             deleteTask(taskId);
-        }, index * 100); // 每个间隔 100ms
+        }, index * 100);
     });
 }
+
+function filterTasks() {
+    const priorityFilter = document.getElementById('priorityFilter');
+    if (!priorityFilter) return;
+    const selectedPriority = priorityFilter.value;
+    const allCards = document.querySelectorAll('#board .task-card');
+    allCards.forEach(card => {
+        const priorityBadge = card.querySelector('.priority-badge');
+        let cardPriority = '';
+        if (priorityBadge) {
+            const badgeText = priorityBadge.textContent;
+            if (badgeText === 'HIGH') cardPriority = 'high';
+            else if (badgeText === 'MEDIUM') cardPriority = 'medium';
+            else if (badgeText === 'LOW') cardPriority = 'low';
+        }
+        if (selectedPriority === 'all' || cardPriority === selectedPriority) {
+            card.classList.remove('is-hidden');
+        } else {
+            card.classList.add('is-hidden');
+        }
+    });
+}
+
+function initMockData() {
+    if (tasks.length > 0) return;
+
+    // To Do column - 3 tasks
+    addTask('todo', {
+        title: '📖 Learn Event Delegation',
+        desc: 'Understand event bubbling & capturing, implement unified Edit/Delete listener in Kanban',
+        priority: 'high',
+        dueDate: '2026-04-20'
+    });
+    addTask('todo', {
+        title: '🧩 Implement Inline Editing',
+        desc: 'Double-click task title to turn into input field, save on Enter/blur',
+        priority: 'high',
+        dueDate: '2026-04-19'
+    });
+    addTask('todo', {
+        title: '📦 Create Task Card with DOM',
+        desc: 'Build card using createElement, no innerHTML',
+        priority: 'low',
+        dueDate: '2026-04-25'
+    });
+
+    // In Progress column - 1 tasks
+    addTask('inprogress', {
+        title: '🗑️ Staggered Delete Animation',
+        desc: 'Clear Done removes each card with 100ms delay fade-out',
+        priority: 'high',
+        dueDate: '2026-04-16'
+    });
+
+    // Done column - 2 tasks
+    addTask('done', {
+        title: '✅ Build HTML Structure',
+        desc: 'Three columns, modal, header with filter',
+        priority: 'low',
+        dueDate: '2026-04-10'
+    });
+    addTask('done', {
+        title: '✅ Style & Responsive',
+        desc: 'Flexbox layout, mobile friendly, smooth transitions',
+        priority: 'low',
+        dueDate: '2026-04-14'
+    });
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
     const allLists = document.querySelectorAll('#board ul');
@@ -194,6 +271,47 @@ document.addEventListener('DOMContentLoaded', () => {
             const taskId = parseInt(card.getAttribute('data-task-id'));
             if (action === 'edit') editTask(taskId);
             else if (action === 'delete') deleteTask(taskId);
+        });
+
+        ul.addEventListener('dblclick', (e) => {
+            const titleElem = e.target.closest('.task-title');
+            if (!titleElem) return;
+            const card = titleElem.closest('li');
+            const taskId = parseInt(card.getAttribute('data-task-id'));
+            const currentTitle = titleElem.textContent;
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentTitle;
+            input.className = 'task-title-input';
+            
+            titleElem.replaceWith(input);
+            input.focus();
+            
+            const saveTitle = () => {
+                const newTitle = input.value.trim();
+                if (newTitle && newTitle !== currentTitle) {
+                    updateTask(taskId, { title: newTitle });
+                } else if (!newTitle) {
+                    const newH3 = document.createElement('h3');
+                    newH3.className = 'task-title';
+                    newH3.textContent = currentTitle;
+                    input.replaceWith(newH3);
+                    return;
+                }
+                const newH3 = document.createElement('h3');
+                newH3.className = 'task-title';
+                newH3.textContent = newTitle || currentTitle;
+                input.replaceWith(newH3);
+            };
+            
+            input.addEventListener('blur', saveTitle);
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    input.blur();
+                }
+            });
         });
     });
 
@@ -227,77 +345,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('taskModal');
     modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
 
-    allLists.forEach(ul => {
-        ul.addEventListener('dblclick', (e) => {
-            const titleElem = e.target.closest('.task-title');
-            if (!titleElem) return;
-            const card = titleElem.closest('li');
-            const taskId = parseInt(card.getAttribute('data-task-id'));
-            const currentTitle = titleElem.textContent;
-        
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = currentTitle;
-            input.className = 'task-title-input';
-        
-            titleElem.replaceWith(input);
-            input.focus();
-        
-            const saveTitle = () => {
-                const newTitle = input.value.trim();
-                if (newTitle && newTitle !== currentTitle) {
-                    updateTask(taskId, { title: newTitle });
-                } else if (!newTitle) {
-                
-                    const newH3 = document.createElement('h3');
-                    newH3.className = 'task-title';
-                    newH3.textContent = currentTitle;
-                    input.replaceWith(newH3);
-                    return;
-                }
-            
-                const newH3 = document.createElement('h3');
-                newH3.className = 'task-title';
-                newH3.textContent = newTitle || currentTitle;
-                input.replaceWith(newH3);
-            };
-        
-            input.addEventListener('blur', saveTitle);
-            input.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    input.blur();
-                }
-            });
-        });
-    });
-
-
     const priorityFilter = document.getElementById('priorityFilter');
-    function filterTasks() {
-        const selectedPriority = priorityFilter.value;
-        const allCards = document.querySelectorAll('#board .task-card');
-        allCards.forEach(card => {
-            const priorityBadge = card.querySelector('.priority-badge');
-            let cardPriority = '';
-            if (priorityBadge) {
-                const badgeText = priorityBadge.textContent;
-                if (badgeText === 'HIGH') cardPriority = 'high';
-                else if (badgeText === 'MEDIUM') cardPriority = 'medium';
-                else if (badgeText === 'LOW') cardPriority = 'low';
-            }
-            if (selectedPriority === 'all' || cardPriority === selectedPriority) {
-                card.classList.remove('is-hidden');
-            } else {
-                card.classList.add('is-hidden');
-            }
-        });
+    if (priorityFilter) {
+        priorityFilter.addEventListener('change', filterTasks);
     }
-
-    priorityFilter.addEventListener('change', filterTasks);
 
     const clearDoneBtn = document.getElementById('clearDoneBtn');
-        if (clearDoneBtn) {
+    if (clearDoneBtn) {
         clearDoneBtn.addEventListener('click', clearDoneTasks);
     }
+
+    initMockData();
 });

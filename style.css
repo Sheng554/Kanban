@@ -246,6 +246,10 @@ ul {
     color: var(--text-black);
 }
 
+#taskModal {
+    display: none;
+}
+
 @media (max-width: 600px) {
     body {
         padding: var(--spacing-md);
@@ -411,4 +415,11 @@ ul {
 
 .clear-done-btn:hover {
     background: #fecaca;
+
+.task-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-xs);
 }
